@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.name = "capita_git"
   s.version = CapitaGit::VERSION
   s.platform = Gem::Platform::RUBY
-  s.authors = [": Write your name"]
-  s.email = [": Write your email address"]
-  s.homepage = ""
-  s.summary = %q{: Write a gem summary}
-  s.description = %q{: Write a gem description}
+  s.authors = ["Sebastian Georgi"]
+  s.email = ["sgeorgi@capita.de"]
+  s.homepage = "https://github.com/capita/capita_git"
+  s.summary = %q{Git-automation tool for managing features branches and more}
+  s.description = %q{see RDoc or command help for further information}
 
   s.rubyforge_project = "capita_git"
 
