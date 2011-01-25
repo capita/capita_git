@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+require 'capita_git'
+require 'capita_git/cli'
+
+begin
+  CapitaGit::CLI.start
+rescue => e
+  CapitaGit.ui.error e.message
+  CapitaGit.ui.debug e.backtrace.join("\n")
+  exit 1
+rescue Interrupt => e
+  CapitaGit.ui.error "\nQuitting..."
+  CapitaGit.ui.debug e.backtrace.join("\n")
+  exit 1
+end

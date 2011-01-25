@@ -1,0 +1,75 @@
+gitc(5) -- git helper for CAPITA Unternehmensberatung GmbH
+=======================================================
+
+## SYNOPSIS
+
+`gitc` help<br>
+`gitc` `-m`|`--man` <file>...<br>
+`gitc` `-S`|`--server` <file>...<br>
+`gitc` `--pipe` <file><br>
+`gitc` &lt; <file>
+
+## DESCRIPTION
+
+**Ronn** converts textfiles to standard roff-formatted UNIX manpages or HTML.
+ronn-format(7) is based on markdown(7) but includes additional rules and syntax
+geared toward authoring manuals.
+
+In its default mode, `ronn` converts one or more input <file>s to HTML or roff
+output files. The `--roff`, `--html`, and `--fragment` options dictate which
+output files are generated. Multiple format arguments may be specified to
+generate multiple output files. Output files are named after and written to the
+same directory as input <file>s.
+
+The `--server` and `--man` options change the output behavior from file
+generation to serving dynamically generated HTML manpages or viewing <file> as
+with man(1).
+
+With no <file> arguments, `ronn` acts as simple filter. Ronn source text is read
+from standard input and roff output is written to standard output. Use the
+`--html`, `--roff`, and/or `--fragment` options to select the output format.
+
+## OPTIONS
+
+These options control whether output is written to file(s), standard output, or
+directly to a man pager.
+
+  * `-m`, `--man`:
+    Don't generate files, display <file>s as if man(1) were invoked on the roff
+    output file. This simulates default man behavior by piping the roff output
+    through groff(1) and the paging program specified by the `MANPAGER`
+    environment variable.
+
+  * `-S`, `--server`:
+    Don't generate files, start an HTTP server at <http://localhost:1207/> and
+    serve dynamically generated HTML for the set of input <file>s. A file named
+    *example.2.ronn* is served as */example.2.html*. There's also an index page
+    at the root with links to each <file>.
+
+    The server respects the `--style` and document attribute options
+    (`--manual`, `--date`, etc.). These same options can be varied at request
+    time by giving them as query parameters: `?manual=FOO&style=dark,toc`
+
+    *NOTE: The builtin server is designed to assist in the process of writing
+    and styling manuals. It is in no way recommended as a general purpose web
+    server.*
+
+  * `--pipe`:
+    Don't generate files, write generated output to standard output. This is the
+    default behavior when ronn source text is piped in on standard input and no
+    <file> arguments are provided.
+
+Format options control the files `ronn` generates, or the output format when the
+`--pipe` argument is specified. When no format options are given, both `--roff`
+and `--html` are assumed.
+
+  * `-r`, `--roff`:
+    Generate roff output. This is the default behavior when no <file>s are given
+    and ronn source text is read from standard input.
+
+  * `-5`, `--html`:
+    Generate output in HTML format.
+
+  * `-f`, `--fragment`:
+    Generate output in HTML format but only the document fragment, not the
+    header, title, or footer.
