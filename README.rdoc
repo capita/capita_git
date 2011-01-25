@@ -1,35 +1,45 @@
-gitc(5) -- git helper for CAPITA Unternehmensberatung GmbH
-=======================================================
+= gitc -- git helper for CAPITA Unternehmensberatung GmbH
 
-## SYNOPSIS
+=== SYNOPSIS
 
-`gitc` help<br>
-`gitc` help <command><br>
-`gitc` check<br>
-`gitc` create [name] [source_branch]<br>
-`gitc` update [branch]<br>
-`gitc` close [branch]<br>
+  $ gitc help
 
-## DESCRIPTION
+  $ gitc help <command>
 
-**gitc** is a git automation tool used by CAPITA Unternehmensberatung GmbH.
+  $ gitc check
+
+  $ gitc create [name] [source_branch]
+
+  $ gitc update [branch]
+
+  $ gitc close [branch]
+
+=== DESCRIPTION 
+
+*gitc* is a git automation tool used by CAPITA Unternehmensberatung GmbH with comes
+along the gem *capita_git*.
 
 It's main purpose is to automate repetivite tasks as spawing new feature branches,
 updating and rebasing from the source branch of a given feature branch, as well as
 closing/merging feature branchs back into their originating timeline.
 
-**gict** uses a strict naming convention for creating, idenfitying and maintaining
+*gict* uses a strict naming convention for creating, idenfitying and maintaining
 local and remote branches and depends on the users's name being set in the git
 configuration of your local cloned copy or in the global settings.
 
-Please make sure that both<br>
-  * `git config user.name` and<br>
-  * `git config user.email`<br>
+Please make sure that both
+  $ git config user.name
+and
+  $ git config user.email
 return your correct name and email address.
 
-## COMMANDS
+=== Installation
 
-For detailed explanation of the various commands, please use **gitc help <command>**.
+  $ gem install capita_git
+
+=== COMMANDS
+
+For detailed explanation of the various commands, please use *gitc help <command>*.
 
 Available commands currently are:
 

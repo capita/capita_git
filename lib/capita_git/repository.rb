@@ -125,11 +125,11 @@ module CapitaGit
       user_name.downcase.split(/\s/).map { |n| n[0, 1] }.join
     end
 
-    private
-
     def source_branch(name)
       name.split('_')[1]
     end
+
+    private
 
     def remote
       @repository.remotes.select { |r| r.name == 'origin' }[0]

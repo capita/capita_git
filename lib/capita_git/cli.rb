@@ -57,17 +57,17 @@ module CapitaGit
     def check
       repo = Repository.open(Dir.pwd)
       CapitaGit.ui.info "-- Starting to check repository '#{repo.dir.to_s}' --------"
-      CapitaGit.ui.info "Active user   : '#{repo.user_name} <#{repo.user_email}>'"
-      CapitaGit.ui.info "User shortcut : '#{repo.user_shortcut}'"
+      CapitaGit.ui.confirm "-> Active user   : '#{repo.user_name} <#{repo.user_email}>'"
+      CapitaGit.ui.confirm "-> User shortcut : '#{repo.user_shortcut}'"
       CapitaGit.ui.info '-----------------------------------------------------------'
       CapitaGit.ui.info ''
 
-      CapitaGit.ui.info '-- Fetching changes from remote \'origin\' ----------------'
+      CapitaGit.ui.info '-- Fetching changes from remote \'origin\' ------------------'
       repo.update_from_remote
       latest_major_release_tag = repo.latest_major_release_tag
       latest_minor_release_tag = repo.latest_minor_release_tag
-      CapitaGit.ui.info "Latest major release tag is: #{latest_major_release_tag || '---'}"
-      CapitaGit.ui.info "Latest minor release tag is: #{latest_minor_release_tag || '---'}"
+      CapitaGit.ui.confirm "-> Latest major release tag is: #{latest_major_release_tag || '---'}"
+      CapitaGit.ui.confirm "-> Latest minor release tag is: #{latest_minor_release_tag || '---'}"
       CapitaGit.ui.info '-----------------------------------------------------------'
       CapitaGit.ui.info ''
 
@@ -79,8 +79,8 @@ module CapitaGit
       CapitaGit.ui.info '-- Checking for presence of major release fixbranch -------'
       local_fixbranch = repo.local_fixbranch_for_version?(latest_major_release_tag)
       remote_fixbranch = repo.remote_fixbranch_for_version?(latest_major_release_tag)
-      CapitaGit.ui.info "Local  : #{local_fixbranch.nil? ? '---' : local_fixbranch.full }"
-      CapitaGit.ui.info "Remote : #{remote_fixbranch.nil? ? '---' : remote_fixbranch.full }"
+      CapitaGit.ui.confirm "-> Local  : #{local_fixbranch.nil? ? '---' : local_fixbranch.full }"
+      CapitaGit.ui.confirm "-> Remote : #{remote_fixbranch.nil? ? '---' : remote_fixbranch.full }"
 
       if not repo.has_remote_fixbranch_for_version?(latest_major_release_tag)
         CapitaGit.ui.info "--> Creating remote fixbranch #{latest_major_release_tag}-fix"
@@ -95,37 +95,37 @@ module CapitaGit
       CapitaGit.ui.info '-----------------------------------------------------------'
     end
 
-    desc "new_feature", "Creates a feature branch"
-    def new_feature(name, source=nil)
+    desc "create", "Creates a new feature branch with the given name and optional source branch"
+    def create(name, source=nil)
       repo = Repository.open(Dir.pwd)
       source = source.nil? ? repo.current_branch : source
       raise "Source branch '#{source}' does not exist" unless repo.has_local_branch?(source)
       raise "Source branch '#{source}' is a feature branch, can't branch from that!" if repo.is_local_feature_branch?(source)
 
-      CapitaGit.ui.info "--> Creating and switching to feature branch '#{repo.user_shortcut}_#{source}_#{name}'"
+      CapitaGit.ui.confirm "--> Creating and switching to feature branch '#{repo.user_shortcut}_#{source}_#{name}'"
       repo.create_local_branch_from_source("#{repo.user_shortcut}_#{source}_#{name}", source)
       repo.checkout_local_branch("#{repo.user_shortcut}_#{source}_#{name}")
     end
 
-    desc "update_feature", "Updates a feature branch"
-    def update_feature(name=nil)
+    desc "update", "Updates a feature branch your currently on or specified by name"
+    def update(name=nil)
       repo = Repository.open(Dir.pwd)
       name = name.nil? ? repo.current_branch : name
       raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
       raise "Source branch '#{name}' is not a feature branch, can't update!" unless repo.is_local_feature_branch?(name)
 
-      CapitaGit.ui.info "--> Updating feature branch '#{name}'"
+      CapitaGit.ui.confirm "--> Updating feature branch '#{name}' from '#{repo.source_branch(name)}'"
       repo.rebase_local_branch(name)
     end
 
-    desc "close_feature", "Closes a feature branch"
-    def close_feature(name=nil)
+    desc "close", "Closes a feature branch your currently on or specified by name onto the source branch"
+    def close(name=nil)
       repo = Repository.open(Dir.pwd)
       name = name.nil? ? repo.current_branch : name
       raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
       raise "Source branch '#{name}' is not a feature branch, can't close!" unless repo.is_local_feature_branch?(name)
 
-      CapitaGit.ui.info "--> Closing feature branch '#{name}'"
+      CapitaGit.ui.confirm "--> Closing feature branch '#{name}' onto '#{repo.source_branch(name)}'"
       repo.rebase_local_branch(name)
       repo.close_local_branch(name)
     end
