@@ -1,5 +1,5 @@
 module ShouldaMacros
-  TEMP_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp'))
+  TEMP_DIR = File.expand_path('/tmp/capita_git_tmp')
   
   # Test method level helpers
   module InstanceMethods
@@ -22,8 +22,8 @@ module ShouldaMacros
     
     # Runs the specified command and asserts it's exit status should be 0
     def assert_command(cmd)
-      Open4.popen4(cmd) { |stdin, stdout, stderr| 'nothing to do' }
-      assert_equal 0, $?.exitstatus, "Expected exit status of 0!"
+      Open4.popen4(cmd) { |stdin, stdout, stderr|  }
+      assert_equal 0, $?.exitstatus, "Expected exit status of 0 for command '#{cmd}'."
     end
   end
 
@@ -49,7 +49,9 @@ module ShouldaMacros
           end
           
           in_dir "local_checkout_2" do
-            assert_command "git clone #{temp_dir('origin')}"
+            assert_command "git clone #{temp_dir('origin')} ."
+            assert_command 'git tag -a 1.0.0 -m "First release"'
+            assert_command 'git push --tags origin master'
           end
         end
         
