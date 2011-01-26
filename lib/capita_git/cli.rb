@@ -126,7 +126,6 @@ module CapitaGit
       raise "Source branch '#{name}' is not a feature branch, can't close!" unless repo.is_local_feature_branch?(name)
 
       CapitaGit.ui.confirm "--> Closing feature branch '#{name}' onto '#{repo.source_branch(name)}'"
-      repo.rebase_local_branch(name)
       repo.close_local_branch(name)
     end
 

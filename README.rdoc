@@ -6,12 +6,22 @@
 
   $ gitc help <command>
 
+  # Checks whether a remote fix branch for the current major release (1.0, 2.1, ...) exists
+  # and creates it otherwise
   $ gitc check
 
+  # Creates a local feature branch based upon the currently checked out one with your user shortcut
+  # and given feature name.
+  # i.e., when your shortcut is co and you're on 1.0-fix, 'gitc create foo' will create and checkout 
+  # 'co_1.0-fix_foo'
   $ gitc create [name] [source_branch]
 
+  # Based upon the naming scheme from gitc create, this will checkout the source branch 1.0-fix,
+  # pull the latest updates and rebase them into your feature branch
   $ gitc update [branch]
 
+  # Same as update, but will also merge your feature branch into the source branch 1.0-fix and delete
+  # the feature branch
   $ gitc close [branch]
 
 === DESCRIPTION 
