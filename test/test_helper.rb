@@ -15,6 +15,6 @@ class Test::Unit::TestCase
   
   # Make sure the temporary directory is purged after every run
   def teardown
-    #FileUtils.rm_rf(temp_dir)
+    FileUtils.rm_rf(temp_dir)
   end
 end

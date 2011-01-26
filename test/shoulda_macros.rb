@@ -23,7 +23,6 @@ module ShouldaMacros
     # Runs the specified command and asserts it's exit status should be 0
     def assert_command(cmd)
       Open4.popen4(cmd) { |stdin, stdout, stderr| 'nothing to do' }
-      puts cmd, $?.inspect
       assert_equal 0, $?.exitstatus, "Expected exit status of 0!"
     end
   end
@@ -54,7 +53,7 @@ module ShouldaMacros
           end
         end
         
-        should("do something...") { assert true }
+        yield
       end
     end
   end
