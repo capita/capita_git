@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email = ["sgeorgi@capita.de"]
   s.homepage = "https://github.com/capita/capita_git"
   s.summary = %q{Git-automation tool for managing features branches and more}
-  s.description = %q{see RDoc or command help for further information}
+  s.description = %q{Git-automation tool for managing features branches and more}
 
   s.rubyforge_project = "capita_git"
 
