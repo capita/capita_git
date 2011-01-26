@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'capita_git'
+require 'git'
 
 require 'test/unit'
 require 'shoulda'
@@ -12,9 +13,4 @@ require 'shoulda_macros'
 class Test::Unit::TestCase
   include ShouldaMacros::InstanceMethods
   extend  ShouldaMacros::ClassMethods
-  
-  # Make sure the temporary directory is purged after every run
-  def teardown
-    FileUtils.rm_rf(temp_dir)
-  end
 end
