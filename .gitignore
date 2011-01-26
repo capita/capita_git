@@ -3,3 +3,4 @@ pkg/*
 .bundle
 .idea
 lib/capita_git/man
+tmp/*
