@@ -6,35 +6,25 @@
 
   $ gitc help <command>
 
-  # Checks whether a remote fix branch for the current major release (1.0, 2.1, ...) exists
-  # and creates it otherwise
   $ gitc check
 
-  # Creates a local feature branch based upon the currently checked out one with your user shortcut
-  # and given feature name.
-  # i.e., when your shortcut is co and you're on 1.0-fix, 'gitc create foo' will create and checkout 
-  # 'co_1.0-fix_foo'
-  $ gitc create [name] [source_branch]
+  $ gitc create [name] ([source_branch])
 
-  # Based upon the naming scheme from gitc create, this will checkout the source branch 1.0-fix,
-  # pull the latest updates and rebase them into your feature branch
-  $ gitc update [branch]
+  $ gitc update ([source_branch])
 
-  # Same as update, but will also merge your feature branch into the source branch 1.0-fix and delete
-  # the feature branch
-  $ gitc close [branch]
+  $ gitc close ([source_branch])
 
 === DESCRIPTION 
 
-*gitc* is a git automation tool used by CAPITA Unternehmensberatung GmbH with comes
-along the gem *capita_git*.
+*gitc* is a git automation tool used by CAPITA Unternehmensberatung GmbH which comes
+packaged as the Rubygem *capita_git*.
 
-It's main purpose is to automate repetivite tasks as spawing new feature branches,
+It's main purpose is to automate repetivite tasks like spawing new feature branches,
 updating and rebasing from the source branch of a given feature branch, as well as
-closing/merging feature branchs back into their originating timeline.
+closing/merging feature branches back into their original tree.
 
-*gict* uses a strict naming convention for creating, idenfitying and maintaining
-local and remote branches and depends on the users's name being set in the git
+*gitc* uses a strict naming convention for creating, identifying and maintaining
+local and remote branches and depends on the user's name being set in the git
 configuration of your local cloned copy or in the global settings.
 
 Please make sure that both
@@ -43,7 +33,7 @@ and
   $ git config user.email
 return your correct name and email address.
 
-=== Installation
+=== INSTALLATION
 
   $ gem install capita_git
 
@@ -54,14 +44,23 @@ For detailed explanation of the various commands, please use *gitc help <command
 Available commands currently are:
 
   * <check>:
-    performs a basic check of your repository, as well as maintains fixbranches for
-    major release tags both locally and remotely
+    Performs a basic check of your repository, as well as maintains fixbranches for
+    major release tags both locally and remotely.
+    i.e., assuming your current release tag is 1.0, this will automatically create
+    the remote branch 1.0-fix that is based upon 1.0
 
-  * <create>:
-    creates a feature branch
+  * <create> branch_name:
+    Creates a feature branch based upon the current branch with the naming scheme
+    <USER_INITIALS>_sourcebranch_branch_name>.
+    Assuming you are 'CO' and on 1.0-fix, *gitc create js_bugfix* will create
+    the local branch *co_1.0-fix_js_bugfix and check it out
 
   * <update>:
-    updates the feature branch's source branch and does a rebase
+    Updates the active feature branch's source branch and does a rebase, thus pulling
+    in the latest changes into your local tree
 
   * <close>:
-    closes a feature branch by updating and merging into the source branch
+    Closes a feature branch by updating the source branch, rebasing it onto your feature
+    branch and then merging into the source branch.
+    
+
