@@ -52,8 +52,8 @@ Available commands currently are:
   * <create> branch_name:
     Creates a feature branch based upon the current branch with the naming scheme
     <USER_INITIALS>_sourcebranch_branch_name>.
-    Assuming you are 'CO' and on 1.0-fix, *gitc create js_bugfix* will create
-    the local branch *co_1.0-fix_js_bugfix and check it out
+    Assuming you are 'CO' and on 1.0-fix, gitc create js_bugfix will create
+    the local branch co_1.0-fix_js_bugfix and check it out
 
   * <update>:
     Updates the active feature branch's source branch and does a rebase, thus pulling
