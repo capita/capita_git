@@ -100,7 +100,7 @@ module ShouldaMacros
     
     # Invokes the gitc binary with given arguments and yields after the setup
     def gitc(args)
-      context "'gitc #{args}'" do
+      context "after invoking 'gitc #{args}'" do
         setup { assert_command("#{BIN_PATH} #{args}") }
         yield
       end
@@ -136,6 +136,24 @@ module ShouldaMacros
     def should_not_have_tag(name)
       should "NOT have tag '#{name}'" do
         assert !repo.tags.map(&:name).include?(name), repo.tags.map(&:name).inspect
+      end
+    end
+    
+    def should_have_file(name, options)
+      raise "Usage: should_have_file 'filename', :in => 'tempdirname' (or %w(dir1 dir2))" unless options[:in]
+      [options[:in]].flatten.each do |dir|
+        should "have file '#{name}' in #{dir}" do
+          assert_equal 1, Dir[File.join(temp_dir(dir), name)].length
+        end
+      end
+    end
+    
+    def should_not_have_file(name, options)
+      raise "Usage: should_not_have_file 'filename', :in => 'tempdirname' (or %w(dir1 dir2))" unless options[:in]
+      [options[:in]].flatten.each do |dir|
+        should "not have file '#{name}' in #{dir}" do
+          assert_equal 0, Dir[File.join(temp_dir(dir), name)].length
+        end
       end
     end
   end
