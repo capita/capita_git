@@ -25,6 +25,8 @@ PLATFORMS
 
 DEPENDENCIES
   capita_git!
+  git (>= 1.2.5)
   open4
   ronn (>= 0.7.3)
   shoulda (>= 2.11.0)
+  thor (>= 0.14.6)

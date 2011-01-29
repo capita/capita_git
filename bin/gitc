@@ -4,6 +4,9 @@ require 'capita_git/cli'
 
 begin
   CapitaGit::CLI.start
+rescue CapitaGit::UncleanError => e
+  CapitaGit.ui.error e.message
+  system 'git status'
 rescue => e
   CapitaGit.ui.error e.message
   CapitaGit.ui.debug e.backtrace.join("\n")

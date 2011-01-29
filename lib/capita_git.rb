@@ -13,4 +13,7 @@ module CapitaGit
   def self.do
     puts "Working"
   end
+
+  class UncleanError < StandardError
+  end
 end
