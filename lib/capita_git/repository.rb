@@ -4,16 +4,19 @@ module CapitaGit
   class Repository
     attr_accessor :git_remote
 
-    def self.open(path)
-      new(path)
+    def self.open(path, cli=nil)
+      new(path, cli)
     end
 
     def method_missing(m, *args)
       @repository.send m, *args
     end
 
-    def initialize(path)
+    def initialize(path, cli)
+      @logger = cli
+
       begin
+        log 'Opening repository'
         @repository = Git.open path
       rescue => e
         raise CapitaGit::RepositoryError.new 'Can\'t access repository: ' + e.message
@@ -23,7 +26,12 @@ module CapitaGit
       raise CapitaGit::UncleanError.new "Pending changes found!" if has_changes?
     end
 
-    def update_from_remote
+    def name
+      dir.to_s.split(/\//).last
+    end
+
+    def fetch_remote_changes
+      log 'Fetching remote changes'
       @repository.fetch(@git_remote)
     end
 
@@ -32,6 +40,7 @@ module CapitaGit
     end
 
     def has_changes?
+      log 'Checking for pending changes'
       changes = `git status --short`
       !changes.empty?
     end
@@ -145,9 +154,13 @@ module CapitaGit
 
     private
 
-    def remote
-      @repository.remotes.select { |r| r.name == 'origin' }[0]
+    def log(message)
+      @logger.send(:debug, "[DEBUG] #{message}") if @logger
     end
+
+#    def remote
+#      @repository.remotes.select { |r| r.name == 'origin' }[0]
+#    end
 
     def major_release_tags
       @repository.tags.map(&:name).select { |tag| tag =~ /^\d+\.\d+$/ }

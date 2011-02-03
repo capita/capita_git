@@ -40,7 +40,7 @@ class CliTest < Test::Unit::TestCase
       
       gitc 'create my_feature' do
         should "be on branch USER_master_my_feature" do
-          user = CapitaGit::Repository.new('.').user_shortcut
+          user = CapitaGit::Repository.open('.').user_shortcut
           assert_equal "#{user}_master_my_feature", repo.current_branch
         end
         

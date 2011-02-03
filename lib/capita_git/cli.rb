@@ -55,49 +55,47 @@ module CapitaGit
     desc "check", "Generates a Gemfile into the current working directory"
     def check
       opts = options.dup
-      CapitaGit.ui.debug "[DEBUG] Starting action 'check'"
+      log :debug, "[DEBUG] Starting action 'check'"
 
-      repo = CapitaGit::Repository.open(Dir.pwd)
+      repo = CapitaGit::Repository.open(Dir.pwd, CapitaGit.ui)
       repo.git_remote = opts[:remote] if opts[:remote]
-      CapitaGit.ui.debug "[DEBUG] Repository remote set to '#{repo.git_remote}'"
+      log :debug, "[DEBUG] Repository remote set to '#{repo.git_remote}'"
 
-      CapitaGit.ui.info "-- Starting to check repository '#{repo.dir.to_s}' --------"
-      CapitaGit.ui.confirm "-> Active user   : '#{repo.user_name} <#{repo.user_email}>'"
-      CapitaGit.ui.confirm "-> User shortcut : '#{repo.user_shortcut}'"
-      CapitaGit.ui.info '-----------------------------------------------------------'
-      CapitaGit.ui.info ''
+      log :info, "-- Starting to check repository '#{repo.name}'"
+      log :confirm, "-> Active user   : '#{repo.user_name} <#{repo.user_email}>'"
+      log :confirm, "-> User shortcut : '#{repo.user_shortcut}'"
+      log :info, "\n"
 
-      CapitaGit.ui.info "-- Checking for latest changes on \'#{repo.remote}\' ----------------"
-      repo.update_from_remote
+      log :info, "-- Checking for latest changes on \'#{repo.remote}\'"
+      repo.fetch_remote_changes
       latest_major_release_tag = repo.latest_major_release_tag
       latest_minor_release_tag = repo.latest_minor_release_tag
-      CapitaGit.ui.confirm "-> Latest major release tag is: #{latest_major_release_tag || '---'}"
-      CapitaGit.ui.confirm "-> Latest minor release tag is: #{latest_minor_release_tag || '---'}"
-      CapitaGit.ui.info '-----------------------------------------------------------'
-      CapitaGit.ui.info ''
+      log :confirm, "-> Latest major release tag is: #{latest_major_release_tag || '---'}"
+      log :confirm, "-> Latest minor release tag is: #{latest_minor_release_tag || '---'}"
+      log :info, "\n"
 
       if latest_major_release_tag.nil?
-        CapitaGit.ui.warn 'No major release tag found, exiting!'
+        log :warn, 'No major release tag found, exiting!'
         exit 0
       end
 
-      CapitaGit.ui.info '-- Checking for presence of major release fixbranch -------'
+      log :info, '-- Checking for presence of major release fixbranch'
       local_fixbranch = repo.local_fixbranch_for_version?(latest_major_release_tag)
       remote_fixbranch = repo.remote_fixbranch_for_version?(latest_major_release_tag)
-      CapitaGit.ui.confirm "-> Local  : #{local_fixbranch.nil? ? '---' : local_fixbranch.full }"
-      CapitaGit.ui.confirm "-> Remote : #{remote_fixbranch.nil? ? '---' : remote_fixbranch.full }"
+      log :confirm, "-> Local  : #{local_fixbranch.nil? ? '---' : local_fixbranch.full }"
+      log :confirm, "-> Remote : #{remote_fixbranch.nil? ? '---' : remote_fixbranch.full }"
 
       if not repo.has_remote_fixbranch_for_version?(latest_major_release_tag)
-        CapitaGit.ui.info "--> Creating remote fixbranch #{latest_major_release_tag}-fix"
+        log :info, "--> Creating remote fixbranch #{latest_major_release_tag}-fix"
         repo.create_remote_fixbranch_for_version(latest_major_release_tag)
       end
 
       if not repo.has_local_fixbranch_for_version?(latest_major_release_tag)
-        CapitaGit.ui.info "--> Creating tracking local fixbranch #{latest_major_release_tag}-fix from remote fixbranch"
+        log :info, "--> Creating tracking local fixbranch #{latest_major_release_tag}-fix from remote fixbranch"
         repo.create_local_fixbranch_for_version(latest_major_release_tag)
       end
 
-      CapitaGit.ui.info '-----------------------------------------------------------'
+      log :info, "\n-- Done!\n"
     end
 
     desc "create", "Creates a new feature branch with the given name and optional source branch"
@@ -108,7 +106,7 @@ module CapitaGit
       raise "Source branch '#{source}' does not exist" unless repo.has_local_branch?(source)
       raise "Source branch '#{source}' is a feature branch, can't branch from that!" if repo.is_local_feature_branch?(source)
 
-      CapitaGit.ui.confirm "--> Creating and switching to feature branch '#{repo.user_shortcut}_#{source}_#{name}'"
+      log :confirm, "--> Creating and switching to feature branch '#{repo.user_shortcut}_#{source}_#{name}'"
       repo.create_local_branch_from_source("#{repo.user_shortcut}_#{source}_#{name}", source)
       repo.checkout_local_branch("#{repo.user_shortcut}_#{source}_#{name}")
     end
@@ -121,7 +119,7 @@ module CapitaGit
       raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
       raise "Source branch '#{name}' is not a feature branch, can't update!" unless repo.is_local_feature_branch?(name)
 
-      CapitaGit.ui.confirm "--> Updating feature branch '#{name}' from '#{repo.source_branch(name)}'"
+      log :confirm, "--> Updating feature branch '#{name}' from '#{repo.source_branch(name)}'"
       repo.rebase_local_branch(name)
     end
 
@@ -133,7 +131,7 @@ module CapitaGit
       raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
       raise "Source branch '#{name}' is not a feature branch, can't close!" unless repo.is_local_feature_branch?(name)
 
-      CapitaGit.ui.confirm "--> Closing feature branch '#{name}' onto '#{repo.source_branch(name)}'"
+      log :confirm, "--> Closing feature branch '#{name}' onto '#{repo.source_branch(name)}'"
       repo.close_local_branch(name)
     end
 
@@ -145,6 +143,10 @@ module CapitaGit
     end
 
     private
+
+    def log(level, message)
+      CapitaGit.ui.send(level, message)
+    end
 
     def have_groff?
       !(`which groff` rescue '').empty?
