@@ -12,7 +12,7 @@ module CapitaGit
 
     def initialize(path)
       @repository = Git.open path
-      check_for_changes
+      raise CapitaGit::UncleanError.new "Repository is not clean!" if has_changes?
     end
 
     def update_from_remote
@@ -23,11 +23,9 @@ module CapitaGit
       @repository.branches.local.select { |b| b.full == @repository.lib.branch_current }[0]
     end
 
-    def check_for_changes
-      unless @repository.status.untracked.empty? and @repository.status.changed.empty? and @repository.status.deleted.empty? and
-          @repository.status.added.empty?
-        raise CapitaGit::UncleanError.new "Repository is not clean!"
-      end
+    def has_changes?
+      changes = `git status --short`
+      ! changes.empty?
     end
 
     def create_feature_branch(name)

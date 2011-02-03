@@ -4,14 +4,16 @@ require 'capita_git'
 begin
   CapitaGit::CLI.start
 rescue CapitaGit::UncleanError => e
-  CapitaGit.ui.error e.message
-  system 'git status'
+  CapitaGit.ui.warn "-- Pending changes detected, bailing out ------------------\n"
+  CapitaGit.ui.warn `git status --short`
+  exit 1
 rescue => e
+  CapitaGit.ui.error "-- Something wen't horribly wrong ------ ------------------\n"
   CapitaGit.ui.error e.message
   CapitaGit.ui.debug e.backtrace.join("\n")
   exit 1
 rescue Interrupt => e
-  CapitaGit.ui.error "\nQuitting..."
+  CapitaGit.ui.error "\n-- Received interrupt, quitting ---------------------------\n"
   CapitaGit.ui.debug e.backtrace.join("\n")
   exit 1
 end
