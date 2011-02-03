@@ -127,6 +127,15 @@ module CapitaGit
       repo.close_local_branch(feature_branch)
     end
 
+    desc "backport", "Merges changes from a fixbranch into master"
+    def backport(fix_branch=nil)
+      repo = CapitaGit::Repository.open(Dir.pwd)
+      fix_branch = fix_branch.nil? ? repo.current_branch : fix_branch
+
+      log :confirm, "--> Backporting changes from '#{fix_branch}' into 'master'"
+      repo.merge_fixbranch(fix_branch)
+    end
+
     desc "runner", "Generates a Gemfile into the current working directory"
 
     def runner(command)

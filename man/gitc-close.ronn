@@ -1,0 +1,25 @@
+gitc-close(1) -- Closes a feature branch
+=======================================================
+
+## SYNOPSIS
+
+`gitc` close<br>
+
+## DESCRIPTION
+
+**gitc close** merges the feature into the source branch.
+
+After performing a 'gitc update', and bailing out if the update process fails, the feature branche's source branch
+is checked out, the feature branch is merged and finally deleted.
+
+## EXAMPLES
+
+* 'gitc close':
+  called out of the feature branch 'jd_master_my-feature' would result in:<br>
+  (git checkout master && git pull && git checkout jd_master_my-feature && git rebase master)<br>
+  (git checkout master && git merge jd_master_my-feature && git branch -d jd_master_my-feature)
+
+* 'gitc update':
+  called out of the feature branch 'jd_2.0-fix_my-feature' would result in:<br>
+  (git checkout 2.0-fix && git pull && git checkout jd_2.0-fix_my-feature && git rebase 2.0-fix)<br>
+  (git checkout 2.0-fix && git merge jd_2.0-fix_my-feature && git branch -d jd_2.0-fix_my-feature)

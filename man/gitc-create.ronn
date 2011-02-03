@@ -1,0 +1,27 @@
+gitc-create(1) -- Creates a feature branch
+=======================================================
+
+## SYNOPSIS
+
+`gitc` create <name> [source_branch]<br>
+
+## DESCRIPTION
+
+**gitc create** checks out a new local feature branch for the given name.
+
+The resulting feature branch derives from the source_branch, which defaults to the branch gitc is called from, and
+is named and prefixed with the user's initials accordingly.
+
+Feature branches can't be created out of existing feature branches!
+
+## EXAMPLES
+
+(git --config user.name = "John Doe")
+
+  * 'gitc create my-feature':
+    called out of the master branch would result in a branch named 'jd_master_my-feature'<br>
+    (git checkout -b jd_master_my-feature master)
+
+  * 'gitc create my-feature':
+    called out of the fix-branch '2.0-fix' would result in a branch named 'jd_2.0-fix_my-feature'<br>
+    (git checkout -b jd_2.0-fix_my-feature 2.0-fix)

@@ -1,0 +1,17 @@
+gitc-backport(1) -- Ports changes from a fix branch into master
+=======================================================
+
+## SYNOPSIS
+
+`gitc` backport<br>
+
+## DESCRIPTION
+
+**gitc backport** merges changes of the currently checked out fix branch back into master.
+
+
+## EXAMPLES
+
+* 'gitc backport':
+  called out of the fix branch '2.0-fix' would result in:<br>
+  (git checkout master && git merge -m 'Backporting changes of fix branch '2.0-fix' into master' 2.0-fix)

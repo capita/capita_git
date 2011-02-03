@@ -1,2 +1,23 @@
-HAHA
-====
+gitc-check(1) -- Check for releases and create branches
+=======================================================
+
+## SYNOPSIS
+
+`gitc` check<br>
+
+## DESCRIPTION
+
+**gitc check** does everything neccessary to start working with gitc's other features.
+
+After displaying basic information about the current git configuration, gitc queries the remote (origin)
+repository to figure out the latest major and minor release tags. The tags **have** to be of the format
+
+* '1.X' as a major release tag
+* '1.X.Y' as a minor release tag
+
+gitc then checks for the presence of local and remote fix-branches for the latest major release number. Both
+local and remote fix-branches are created and linked, based on a checkout of the latest major release tag.
+If a fix-branch already exists on the remote repository, only a tracking local branch will be created.
+
+For example, running gitc check on a repository with tags '1.0', '1.1' and '1.1.1' will result in the creation
+of local and remote branch '1.1-fix'.

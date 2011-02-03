@@ -81,9 +81,15 @@ module CapitaGit
     def close_local_branch(branch)
       raise "Source branch '#{branch}' is not a feature branch, can't close!" unless is_local_feature_branch?(branch)
       rebase_local_branch(branch)
-      system "git checkout #{source_branch(branch)}"
+      checkout_local_branch source_branch(branch)
       system "git merge #{branch}"
       system "git branch -d #{branch}"
+    end
+
+    def merge_fixbranch(branch)
+      raise "Source branch '#{branch}' is not a fix branch!" unless is_local_fixbranch?(branch)
+      checkout_local_branch 'master'
+      system "git merge -m 'Backporting changes of fix branch \'#{branch}\' into master' #{branch}"
     end
 
     def has_local_branch?(name)
@@ -92,6 +98,10 @@ module CapitaGit
 
     def is_local_feature_branch?(name)
       !name.match(/^#{user_shortcut}/).nil?
+    end
+
+    def is_local_fixbranch?(name)
+      local_fixbranch_for_version?(latest_major_release_tag).to_s == name
     end
 
     def on_branchable_branch?(branch)

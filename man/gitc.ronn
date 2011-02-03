@@ -9,6 +9,7 @@ gitc(5) -- git helper for CAPITA Unternehmensberatung GmbH
 `gitc` create [name] [source_branch]<br>
 `gitc` update [branch]<br>
 `gitc` close [branch]<br>
+`gitc` backport [branch]<br>
 
 ## DESCRIPTION
 
@@ -41,7 +42,10 @@ Available commands currently are:
     creates a feature branch
 
   * <update>:
-    updates the feature branch's source branch and does a rebase
+    updates the feature branch's source branch and rebases the feature branch
 
   * <close>:
     closes a feature branch by updating and merging into the source branch
+
+  * <backport>:
+    merges changes from a fix branch into master

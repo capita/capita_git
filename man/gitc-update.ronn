@@ -1,0 +1,26 @@
+gitc-update(1) -- Update a feature branch
+=======================================================
+
+## SYNOPSIS
+
+`gitc` update<br>
+
+## DESCRIPTION
+
+**gitc update** updates the currently checked out feature branch.
+
+Based on the current feature branch's name, the determined source branch is checked out and updated via git pull and
+the feature branch gets rebased with any new changeset from the source branch. In case of an unsuccessful rebase, the
+user needs to proceed as normal (e.g. resolving conflicts, issuing 'git add .' and 'git rebase --continue').
+
+Gitc will fail if the source branch doesn't exist or is a feature branch itself!
+
+## EXAMPLES
+
+  * 'gitc update':
+    called out of the feature branch 'jd_master_my-feature' would result in updating 'master' and doing a rebase<br>
+    (git checkout master && git pull && git checkout jd_master_my-feature && git rebase master)
+
+  * 'gitc update':
+    called out of the feature branch 'jd_2.0-fix_my-feature' would result in updating '2.0-fix' and doing a rebase<br>
+    (git checkout 2.0-fix && git pull && git checkout jd_2.0-fix_my-feature && git rebase 2.0-fix)
