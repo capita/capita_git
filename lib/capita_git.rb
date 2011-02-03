@@ -20,4 +20,7 @@ module CapitaGit
 
   class UncleanError < StandardError
   end
+
+  class RepositoryError < StandardError
+  end
 end

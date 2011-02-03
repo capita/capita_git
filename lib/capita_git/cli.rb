@@ -51,17 +51,23 @@ module CapitaGit
       end
     end
 
+    method_option 'remote', :type => :string
     desc "check", "Generates a Gemfile into the current working directory"
-
     def check
+      opts = options.dup
+      CapitaGit.ui.debug "[DEBUG] Starting action 'check'"
+
       repo = CapitaGit::Repository.open(Dir.pwd)
+      repo.git_remote = opts[:remote] if opts[:remote]
+      CapitaGit.ui.debug "[DEBUG] Repository remote set to '#{repo.git_remote}'"
+
       CapitaGit.ui.info "-- Starting to check repository '#{repo.dir.to_s}' --------"
       CapitaGit.ui.confirm "-> Active user   : '#{repo.user_name} <#{repo.user_email}>'"
       CapitaGit.ui.confirm "-> User shortcut : '#{repo.user_shortcut}'"
       CapitaGit.ui.info '-----------------------------------------------------------'
       CapitaGit.ui.info ''
 
-      CapitaGit.ui.info '-- Fetching changes from remote \'origin\' ------------------'
+      CapitaGit.ui.info "-- Checking for latest changes on \'#{repo.remote}\' ----------------"
       repo.update_from_remote
       latest_major_release_tag = repo.latest_major_release_tag
       latest_minor_release_tag = repo.latest_minor_release_tag
@@ -95,6 +101,7 @@ module CapitaGit
     end
 
     desc "create", "Creates a new feature branch with the given name and optional source branch"
+
     def create(name, source=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       source = source.nil? ? repo.current_branch : source
@@ -107,6 +114,7 @@ module CapitaGit
     end
 
     desc "update", "Updates a feature branch your currently on or specified by name"
+
     def update(name=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       name = name.nil? ? repo.current_branch : name
@@ -118,6 +126,7 @@ module CapitaGit
     end
 
     desc "close", "Closes a feature branch your currently on or specified by name onto the source branch"
+
     def close(name=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       name = name.nil? ? repo.current_branch : name
@@ -129,6 +138,7 @@ module CapitaGit
     end
 
     desc "runner", "Generates a Gemfile into the current working directory"
+
     def runner(command)
       repo = CapitaGit::Repository.open(Dir.pwd)
       puts repo.send("#{command}")

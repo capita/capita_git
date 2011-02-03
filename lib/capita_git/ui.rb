@@ -18,7 +18,7 @@ module CapitaGit
     end
 
     class Shell < UI
-      attr_writer :shell
+      attr_accessor :shell
 
       def initialize(shell)
         @shell = shell

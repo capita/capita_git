@@ -2,6 +2,8 @@ require 'git'
 
 module CapitaGit
   class Repository
+    attr_accessor :git_remote
+
     def self.open(path)
       new(path)
     end
@@ -11,12 +13,18 @@ module CapitaGit
     end
 
     def initialize(path)
-      @repository = Git.open path
-      raise CapitaGit::UncleanError.new "Repository is not clean!" if has_changes?
+      begin
+        @repository = Git.open path
+      rescue => e
+        raise CapitaGit::RepositoryError.new 'Can\'t access repository: ' + e.message
+      end
+
+      @git_remote = 'origin'
+      raise CapitaGit::UncleanError.new "Pending changes found!" if has_changes?
     end
 
     def update_from_remote
-      @repository.fetch(remote)
+      @repository.fetch(@git_remote)
     end
 
     def current_branch
@@ -25,7 +33,7 @@ module CapitaGit
 
     def has_changes?
       changes = `git status --short`
-      ! changes.empty?
+      !changes.empty?
     end
 
     def create_feature_branch(name)

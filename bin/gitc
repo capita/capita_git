@@ -4,16 +4,25 @@ require 'capita_git'
 begin
   CapitaGit::CLI.start
 rescue CapitaGit::UncleanError => e
-  CapitaGit.ui.warn "-- Pending changes detected, bailing out ------------------\n"
-  CapitaGit.ui.warn `git status --short`
+  CapitaGit.ui.error "-- ERROR DETECTED ----------------------------------------"
+  CapitaGit.ui.error "   #{e.message}"
+  CapitaGit.ui.error `git status --short`
+  exit 1
+  rescue CapitaGit::RepositoryError => e
+  CapitaGit.ui.error "-- ERROR DETECTED ----------------------------------------"
+  CapitaGit.ui.error "   #{e.message}"
+  CapitaGit.ui.debug "-- BACKTRACE ---------------------------------------------"
+  e.backtrace.each { |bt| CapitaGit.ui.debug "-  #{bt}"}
   exit 1
 rescue => e
-  CapitaGit.ui.error "-- Something wen't horribly wrong ------ ------------------\n"
-  CapitaGit.ui.error e.message
-  CapitaGit.ui.debug e.backtrace.join("\n")
+  CapitaGit.ui.error "-- ERROR DETECTED ----------------------------------------"
+  CapitaGit.ui.error "   #{e.class}: #{e.message}"
+  CapitaGit.ui.debug "-- BACKTRACE ---------------------------------------------"
+  e.backtrace.each { |bt| CapitaGit.ui.debug "-  #{bt}"}
   exit 1
 rescue Interrupt => e
   CapitaGit.ui.error "\n-- Received interrupt, quitting ---------------------------\n"
-  CapitaGit.ui.debug e.backtrace.join("\n")
+  CapitaGit.ui.debug "-- BACKTRACE ---------------------------------------------"
+  e.backtrace.each { |bt| CapitaGit.ui.debug "-  #{bt}"}
   exit 1
 end
