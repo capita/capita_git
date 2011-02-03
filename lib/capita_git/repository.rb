@@ -69,31 +69,33 @@ module CapitaGit
       @repository.branch(name).checkout
     end
 
-    def rebase_local_branch(name)
-      raise "Can't update #{name} since it doesn't exist!" unless has_local_branch?(name)
-      checkout_local_branch source_branch(name)
+    def rebase_local_branch(branch)
+      raise "Can't update #{branch} since it doesn't exist!" unless has_local_branch?(branch)
+      checkout_local_branch source_branch(branch)
       system "git pull"
-      checkout_local_branch name
-      system "git rebase #{source_branch(name)}"
+      checkout_local_branch branch
+      system "git rebase #{source_branch(branch)}"
+      raise CapitaGit::UncleanError.new "Rebasing failed, please correct and issue 'git rebase --continue'" if has_changes?
     end
 
-    def close_local_branch(name)
-      rebase_local_branch(name)
-      system "git checkout #{source_branch(name)}"
-      system "git merge #{name}"
-      system "git branch -d #{name}"
+    def close_local_branch(branch)
+      raise "Source branch '#{branch}' is not a feature branch, can't close!" unless is_local_feature_branch?(branch)
+      rebase_local_branch(branch)
+      system "git checkout #{source_branch(branch)}"
+      system "git merge #{branch}"
+      system "git branch -d #{branch}"
     end
 
     def has_local_branch?(name)
       !@repository.branches.local.detect { |b| b.full =~ /#{name.gsub('/', '\/')}/ }.nil?
     end
 
-    def on_branchable_branch?(branch)
-      branch == 'master' or not is_local_feature_branch?(branch)
-    end
-
     def is_local_feature_branch?(name)
       !name.match(/^#{user_shortcut}/).nil?
+    end
+
+    def on_branchable_branch?(branch)
+      branch == 'master' or not is_local_feature_branch?(branch)
     end
 
     def create_remote_fixbranch_for_version(version)
@@ -158,6 +160,7 @@ module CapitaGit
     def log(message)
       @logger.send(:debug, "[DEBUG] #{message}") if @logger
     end
+
 
 #    def remote
 #      @repository.remotes.select { |r| r.name == 'origin' }[0]

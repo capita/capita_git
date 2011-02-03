@@ -109,27 +109,22 @@ module CapitaGit
     end
 
     desc "update", "Updates a feature branch your currently on or specified by name"
-
-    def update(name=nil)
+    def update(feature_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
-      name = name.nil? ? repo.current_branch : name
-      raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
-      raise "Source branch '#{name}' is not a feature branch, can't update!" unless repo.is_local_feature_branch?(name)
+      feature_branch = feature_branch.nil? ? repo.current_branch : feature_branch
+      raise "Source branch '#{feature_branch}' is not a feature branch, can't update!" unless repo.is_local_feature_branch?(feature_branch)
 
-      log :confirm, "--> Updating feature branch '#{name}' from '#{repo.source_branch(name)}'"
-      repo.rebase_local_branch(name)
+      log :confirm, "--> Updating feature branch '#{feature_branch}' from '#{repo.source_branch(feature_branch)}'"
+      repo.rebase_local_branch(feature_branch)
     end
 
     desc "close", "Closes a feature branch your currently on or specified by name onto the source branch"
-
-    def close(name=nil)
+    def close(feature_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
-      name = name.nil? ? repo.current_branch : name
-      raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
-      raise "Source branch '#{name}' is not a feature branch, can't close!" unless repo.is_local_feature_branch?(name)
+      feature_branch = feature_branch.nil? ? repo.current_branch : feature_branch
 
-      log :confirm, "--> Closing feature branch '#{name}' onto '#{repo.source_branch(name)}'"
-      repo.close_local_branch(name)
+      log :confirm, "--> Closing feature branch '#{feature_branch}' onto '#{repo.source_branch(feature_branch)}'"
+      repo.close_local_branch(feature_branch)
     end
 
     desc "runner", "Generates a Gemfile into the current working directory"
