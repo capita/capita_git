@@ -46,10 +46,10 @@ module CapitaGit
       !changes.empty?
     end
 
-    def create_local_branch(name, source, track=false)
-      raise "Branch '#{name}' already exists!" if has_local_branch?(name)
-      raise "Current branch '#{source}' can't be used as a source for branching!" unless on_branchable_branch?(source)
-      system "git branch #{track ? '--track' : ''} #{name} #{source}"
+    def create_local_branch(new_branch, source_branch, track=false)
+      raise "Branch '#{new_branch}' already exists!" if has_local_branch?(new_branch)
+      raise "Current branch '#{source_branch}' can't be used as a source for branching!" unless on_branchable_branch?(source_branch)
+      system "git branch #{track ? '--track' : ''} #{new_branch} #{source_branch}"
     end
 
     def push_local_branch_to_remote(remote, local_name, remote_name=nil)

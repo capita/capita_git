@@ -99,12 +99,13 @@ module CapitaGit
     end
 
     desc "create", "Creates a new feature branch with the given name and optional source branch"
-    def create(name, source=nil)
+    def create(name, source_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
-      source = source.nil? ? repo.current_branch.to_s : source
-      log :confirm, "--> Creating and switching to feature branch '#{repo.user_shortcut}_#{source}_#{name}'"
-      repo.create_local_branch("#{repo.user_shortcut}_#{source}_#{name}", source)
-      repo.checkout_local_branch("#{repo.user_shortcut}_#{source}_#{name}")
+      source_branch = source_branch.nil? ? repo.current_branch.to_s : source_branch
+      new_branch = "#{repo.user_shortcut}_#{source_branch}_#{name}"
+      log :confirm, "--> Creating and switching to feature branch '#{new_branch}'"
+      repo.create_local_branch(new_branch, source_branch)
+      repo.checkout_local_branch(new_branch)
     end
 
     desc "update", "Updates a feature branch your currently on or specified by name"
