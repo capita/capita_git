@@ -99,15 +99,11 @@ module CapitaGit
     end
 
     desc "create", "Creates a new feature branch with the given name and optional source branch"
-
     def create(name, source=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
-      source = source.nil? ? repo.current_branch : source
-      raise "Source branch '#{source}' does not exist" unless repo.has_local_branch?(source)
-      raise "Source branch '#{source}' is a feature branch, can't branch from that!" if repo.is_local_feature_branch?(source)
-
+      source = source.nil? ? repo.current_branch.to_s : source
       log :confirm, "--> Creating and switching to feature branch '#{repo.user_shortcut}_#{source}_#{name}'"
-      repo.create_local_branch_from_source("#{repo.user_shortcut}_#{source}_#{name}", source)
+      repo.create_local_branch("#{repo.user_shortcut}_#{source}_#{name}", source)
       repo.checkout_local_branch("#{repo.user_shortcut}_#{source}_#{name}")
     end
 

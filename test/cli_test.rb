@@ -37,7 +37,7 @@ class CliTest < Test::Unit::TestCase
           end
         end
       end
-      
+
       gitc 'create my_feature' do
         should "be on branch USER_master_my_feature" do
           user = CapitaGit::Repository.open('.').user_shortcut
@@ -45,7 +45,10 @@ class CliTest < Test::Unit::TestCase
         end
         
         should_not_have_file 'awesome_feature', :in => 'local_checkout_1'
-        
+
+        should "break trying to create another feature branch from existing feature branch" do
+          assert_command_fail 'gitc create new_feature'
+        end
         # Propagating changes on source branch with gitc update
         context "after checkout 2 pushes file master_2_update on master" do
           setup do

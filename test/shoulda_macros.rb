@@ -27,6 +27,13 @@ module ShouldaMacros
       #puts `#{cmd}`
       assert_equal 0, $?.exitstatus, "Expected exit status of 0 for command '#{cmd}'"
     end
+
+    # Runs the specified command and asserts it's exit status should be 1
+    def assert_command_fail(cmd)
+      Open4.popen4(cmd) { |pid, stdin, stdout, stderr|  }
+      #puts `#{cmd}`
+      assert_equal 1, $?.exitstatus, "Expected exit status of 1 for command '#{cmd}'"
+    end
     
     # Opens a Git ruby lib instance for current working dir and returns it
     def repo

@@ -3,6 +3,7 @@ require 'git'
 module CapitaGit
   class Repository
     attr_accessor :git_remote
+    attr_reader :logger
 
     def self.open(path, cli=nil)
       new(path, cli)
@@ -45,13 +46,9 @@ module CapitaGit
       !changes.empty?
     end
 
-    def create_feature_branch(name)
-      raise "Can't create feature branch from branch #{current_branch} since you already seem to be on one" if current_branch =~ /#{user_shortcut}/
-      system "git checkout -b #{user_shortcut}/#{current_branch}/#{name}"
-    end
-
-    def create_local_branch_from_source(name, source, track=false)
+    def create_local_branch(name, source, track=false)
       raise "Branch '#{name}' already exists!" if has_local_branch?(name)
+      raise "Current branch '#{source}' can't be used as a source for branching!" unless on_branchable_branch?(source)
       system "git branch #{track ? '--track' : ''} #{name} #{source}"
     end
 
@@ -91,18 +88,22 @@ module CapitaGit
       !@repository.branches.local.detect { |b| b.full =~ /#{name.gsub('/', '\/')}/ }.nil?
     end
 
+    def on_branchable_branch?(branch)
+      branch == 'master' or not is_local_feature_branch?(branch)
+    end
+
     def is_local_feature_branch?(name)
       !name.match(/^#{user_shortcut}/).nil?
     end
 
     def create_remote_fixbranch_for_version(version)
-      create_local_branch_from_source("local_#{version}-fix", version)
+      create_local_branch("local_#{version}-fix", version)
       push_local_branch_to_remote('origin', "local_#{version}-fix", "#{version}-fix")
       delete_local_branch("local_#{version}-fix")
     end
 
     def create_local_fixbranch_for_version(version)
-      create_local_branch_from_source("#{version}-fix", "origin/#{version}-fix", true)
+      create_local_branch("#{version}-fix", "origin/#{version}-fix", true)
     end
 
     def local_fixbranch_for_version?(version)
