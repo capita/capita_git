@@ -1,4 +1,3 @@
-$:.unshift File.expand_path(__FILE__)
 require 'thor'
 require 'thor/actions'
 require 'rubygems/config_file'
@@ -12,9 +11,9 @@ module CapitaGit
     def initialize(*)
       super
       the_shell = (options["no-color"] ? Thor::Shell::Basic.new : shell)
-      CapitaGit.ui = UI::Shell.new(the_shell)
+      CapitaGit.ui = CapitaGit::UI::Shell.new(the_shell)
       CapitaGit.ui.debug! if options["verbose"]
-      Gem::DefaultUserInteraction.ui = UI::RGProxy.new(CapitaGit.ui)
+      Gem::DefaultUserInteraction.ui = CapitaGit::UI::RGProxy.new(CapitaGit.ui)
     end
 
     check_unknown_options! unless ARGV.include?("exec") || ARGV.include?("config")
@@ -55,7 +54,7 @@ module CapitaGit
     desc "check", "Generates a Gemfile into the current working directory"
 
     def check
-      repo = Repository.open(Dir.pwd)
+      repo = CapitaGit::Repository.open(Dir.pwd)
       CapitaGit.ui.info "-- Starting to check repository '#{repo.dir.to_s}' --------"
       CapitaGit.ui.confirm "-> Active user   : '#{repo.user_name} <#{repo.user_email}>'"
       CapitaGit.ui.confirm "-> User shortcut : '#{repo.user_shortcut}'"
@@ -97,7 +96,7 @@ module CapitaGit
 
     desc "create", "Creates a new feature branch with the given name and optional source branch"
     def create(name, source=nil)
-      repo = Repository.open(Dir.pwd)
+      repo = CapitaGit::Repository.open(Dir.pwd)
       source = source.nil? ? repo.current_branch : source
       raise "Source branch '#{source}' does not exist" unless repo.has_local_branch?(source)
       raise "Source branch '#{source}' is a feature branch, can't branch from that!" if repo.is_local_feature_branch?(source)
@@ -109,7 +108,7 @@ module CapitaGit
 
     desc "update", "Updates a feature branch your currently on or specified by name"
     def update(name=nil)
-      repo = Repository.open(Dir.pwd)
+      repo = CapitaGit::Repository.open(Dir.pwd)
       name = name.nil? ? repo.current_branch : name
       raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
       raise "Source branch '#{name}' is not a feature branch, can't update!" unless repo.is_local_feature_branch?(name)
@@ -120,7 +119,7 @@ module CapitaGit
 
     desc "close", "Closes a feature branch your currently on or specified by name onto the source branch"
     def close(name=nil)
-      repo = Repository.open(Dir.pwd)
+      repo = CapitaGit::Repository.open(Dir.pwd)
       name = name.nil? ? repo.current_branch : name
       raise "Source branch '#{name}' does not exist" unless repo.has_local_branch?(name)
       raise "Source branch '#{name}' is not a feature branch, can't close!" unless repo.is_local_feature_branch?(name)
@@ -131,7 +130,7 @@ module CapitaGit
 
     desc "runner", "Generates a Gemfile into the current working directory"
     def runner(command)
-      repo = Repository.open(Dir.pwd)
+      repo = CapitaGit::Repository.open(Dir.pwd)
       puts repo.send("#{command}")
     end
 

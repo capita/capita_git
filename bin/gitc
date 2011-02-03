@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require 'capita_git'
-require 'capita_git/cli'
 
 begin
   CapitaGit::CLI.start
