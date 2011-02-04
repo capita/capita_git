@@ -33,7 +33,12 @@ module CapitaGit
 
       manpages = %w(
               gitc
-              gitc-check)
+              gitc-check
+              gitc-create
+              gitc-update
+              gitc-close
+              gitc-backport
+              gitc-install_autocomplete)
 
       if manpages.include?(command)
         root = File.expand_path("../man", __FILE__)
@@ -53,6 +58,7 @@ module CapitaGit
 
     method_option 'remote', :type => :string
     desc "check", "Generates a Gemfile into the current working directory"
+
     def check
       opts = options.dup
       log :debug, "[DEBUG] Starting action 'check'"
@@ -99,6 +105,7 @@ module CapitaGit
     end
 
     desc "create", "Creates a new feature branch with the given name and optional source branch"
+
     def create(name, source_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       source_branch = source_branch.nil? ? repo.current_branch.to_s : source_branch
@@ -109,6 +116,7 @@ module CapitaGit
     end
 
     desc "update", "Updates a feature branch your currently on or specified by name"
+
     def update(feature_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       feature_branch = feature_branch.nil? ? repo.current_branch : feature_branch
@@ -119,6 +127,7 @@ module CapitaGit
     end
 
     desc "close", "Closes a feature branch your currently on or specified by name onto the source branch"
+
     def close(feature_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       feature_branch = feature_branch.nil? ? repo.current_branch : feature_branch
@@ -128,12 +137,31 @@ module CapitaGit
     end
 
     desc "backport", "Merges changes from a fixbranch into master"
+
     def backport(fix_branch=nil)
       repo = CapitaGit::Repository.open(Dir.pwd)
       fix_branch = fix_branch.nil? ? repo.current_branch : fix_branch
 
       log :confirm, "--> Backporting changes from '#{fix_branch}' into 'master'"
       repo.merge_fixbranch(fix_branch)
+    end
+
+    desc "install_autocomplete", "asd"
+
+    def install_autocomplete
+      root = File.expand_path("../../", __FILE__)
+      system "cp #{root}/bash_completion.txt ~/.gitc_completion"
+      system "if grep -q 'gitc_completion' ~/.bashrc; then echo 'Done'; else echo '. .gitc_completion' >> ~/.bashrc; . ~/.gitc_completion; fi"
+    end
+
+    desc "publish", "Published a local branch to origin"
+
+    def publish(branch_name=nil)
+      repo = CapitaGit::Repository.open(Dir.pwd)
+      branch_name = branch_name.nil? ? repo.current_branch : branch_name
+
+      log :confirm, "--> Publishing '#{branch_name}' to 'origin"
+      repo.publish_branch(branch_name)
     end
 
     desc "runner", "Generates a Gemfile into the current working directory"

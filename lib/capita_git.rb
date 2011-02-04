@@ -24,3 +24,7 @@ module CapitaGit
   class RepositoryError < StandardError
   end
 end
+
+Gem.post_install do |installer|
+  puts "!!! #{installer.spec.full_name} INSTALLED !!!"
+end

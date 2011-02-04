@@ -14,6 +14,10 @@
 
   $ gitc close ([source_branch])
 
+  $ gitc backport ([branch])
+
+  $ gitc install_autocompletion
+
 === DESCRIPTION 
 
 *gitc* is a git automation tool used by CAPITA Unternehmensberatung GmbH which comes
@@ -36,6 +40,8 @@ return your correct name and email address.
 === INSTALLATION
 
   $ gem install capita_git
+
+  $ gitc install_autocomplete
 
 === COMMANDS
 
@@ -62,5 +68,11 @@ Available commands currently are:
   * <close>:
     Closes a feature branch by updating the source branch, rebasing it onto your feature
     branch and then merging into the source branch.
+
+  * <backport>:
+    Merges changes from a fix branch into master
+
+  * <install_autocomplete>:
+    Installs/updates and loads gitc autocompletion bash extension
     
 

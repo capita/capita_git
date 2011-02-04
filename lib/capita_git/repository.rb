@@ -92,8 +92,21 @@ module CapitaGit
       system "git merge -m 'Backporting changes of fix branch \'#{branch}\' into master' #{branch}"
     end
 
+    def publish_branch(branch)
+      raise "Can't publish '#{branch}' since it doesn't exist!" unless has_local_branch?(branch)
+      raise "'#{remote_name(branch)}' already exists remotely!" if has_remote_branch?(remote_name(branch))
+      push_local_branch_to_remote('origin', branch, remote_name(branch))
+      create_local_branch(remote_name(branch), "origin/#{remote_name(branch)}", true)
+      checkout_local_branch remote_name(branch)
+      system "git branch -D #{branch}"
+    end
+
     def has_local_branch?(name)
-      !@repository.branches.local.detect { |b| b.full =~ /#{name.gsub('/', '\/')}/ }.nil?
+      !@repository.branches.local.detect { |b| b.full =~ /^#{name}.*/ }.nil?
+    end
+
+    def has_remote_branch?(name)
+      !@repository.branches.remote.detect { |b| b.full =~ /^#{name}.*/ }.nil?
     end
 
     def is_local_feature_branch?(name)
@@ -163,6 +176,10 @@ module CapitaGit
 
     def source_branch(name)
       name.split('_')[1]
+    end
+
+    def remote_name(name)
+      name.gsub(/#{user_shortcut}_/, '').gsub(/_/,'-')
     end
 
     private

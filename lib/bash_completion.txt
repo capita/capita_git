@@ -1,0 +1,23 @@
+_gitc()
+{
+        local cur prev tags base
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        local tags="create update close check backport publish"
+
+        case "${prev}" in
+                update|close|publish)
+                        local user=`git config user.name | awk '{split($0,a," "); print tolower(substr(a[1],0,1)substr(a[2],0,1))}'`
+                        state=`git branch 2>&1 > /dev/null`
+                        if [ $? == "0" ]; then
+                            local running=$(for x in `git branch | sed s/\*/' '/ | awk '{ print $1 }' | grep ^${user}_`; do echo ${x} ; done )
+                            COMPREPLY=($(compgen -W "${running}" ${cur}))
+                            return 0
+                        fi
+                        ;;
+        esac
+
+        COMPREPLY=($(compgen -W "${tags}" ${cur}))
+}
+complete -F _gitc gitc

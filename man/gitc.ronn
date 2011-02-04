@@ -10,6 +10,7 @@ gitc(5) -- git helper for CAPITA Unternehmensberatung GmbH
 `gitc` update [branch]<br>
 `gitc` close [branch]<br>
 `gitc` backport [branch]<br>
+`gitc` install_autocomplete<br>
 
 ## DESCRIPTION
 
@@ -49,3 +50,6 @@ Available commands currently are:
 
   * <backport>:
     merges changes from a fix branch into master
+
+  * <install_autocomplete>:
+    installs/updates and loads gitc autocompletion bash extension
