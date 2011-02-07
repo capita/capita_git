@@ -12,7 +12,11 @@ module CapitaGit
       class_eval do
         desc "#{cmd}", "Passes #{cmd} to git"
         define_method cmd.to_sym do |*args|
-          log :warn, 'You called a git command from gitc, passing it along for now...'
+          log :warn, 'You called a git command from gitc...'
+          3.downto(1) do |i|
+            log :warn, "Executing in #{i}"
+            sleep 1
+          end
           system "git #{cmd} #{args}"
         end
       end
