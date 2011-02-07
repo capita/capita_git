@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'capita_git'
+require File.join(File.dirname(__FILE__), '../lib/capita_git')
 
 begin
   CapitaGit::CLI.start

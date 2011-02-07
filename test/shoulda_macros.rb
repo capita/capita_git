@@ -1,5 +1,7 @@
+require 'digest/sha1'
+
 module ShouldaMacros
-  TEMP_DIR = File.expand_path('/tmp/capita_git_tmp')
+  TEMP_DIR = File.expand_path("/tmp/capita_git_tmp-#{Digest::SHA1.hexdigest("#{Time.now}#{rand(99999)}")}")
   BIN_PATH = File.expand_path(File.join(File.dirname(__FILE__), '..', 'bin/gitc'))
 
   # Test method level helpers
@@ -91,7 +93,9 @@ module ShouldaMacros
 
         # Make sure the temporary directory is purged after every run
         teardown do
-          FileUtils.rm_rf(temp_dir)
+          Dir.chdir('/tmp') do
+            FileUtils.rm_rf(ShouldaMacros::TEMP_DIR)
+          end
         end
       end
     end
