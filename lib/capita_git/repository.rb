@@ -163,11 +163,11 @@ module CapitaGit
     end
 
     def user_name
-      @repository.config('user.name')
+      @user_name ||= `git config --get user.name`.strip.chomp
     end
 
     def user_email
-      @repository.config('user.email')
+      @user_email ||= `git config --get user.email`.strip.chomp
     end
 
     def user_shortcut
