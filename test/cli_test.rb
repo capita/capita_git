@@ -5,6 +5,10 @@ class CliTest < Test::Unit::TestCase
     in_dir 'local_checkout_1' do
       after('git pull') { should_have_tag '1.0' }
 
+      should('respond to git-cmd #status') { assert_command_match 'gitc status', "nothing to commit" }
+      should('respond to git-cmd #pull') { assert_command_match 'gitc pull', "Already up-to-date" }
+      should('respond to git-cmd #push') { assert_command_match 'gitc push', "Everything up-to-date" }
+
       gitc 'check' do
         should_have_branch '1.0-fix'
 

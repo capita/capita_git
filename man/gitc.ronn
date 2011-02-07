@@ -53,3 +53,8 @@ Available commands currently are:
 
   * <install_autocomplete>:
     installs/updates and loads gitc autocompletion bash extension
+
+## GIT-PASSTHROUGH
+
+If **gitc** is called with a default git-command it will pass on both command and arguments to git after displaying
+a short warning
