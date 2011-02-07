@@ -7,4 +7,4 @@ gitc-install_autocomplete(1) -- Installs gitc autocompletion
 
 ## DESCRIPTION
 
-**gitc autocomplete** installs a script in ~/.gitc_autocomplete, appends inclusion in ~/.bashrc and sources into current shell.
+**gitc autocomplete** installs a script in ~/.gitc_autocompletion, appends inclusion in ~/.bashrc and sources into current shell.

@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/capita/capita_git"
   s.summary = %q{Git-automation tool for quick handling of common patterns for feature and fix branches}
   s.description = %q{Git-automation tool for quick handling of common patterns for feature and fix branches}
-
+  s.post_install_message = %Q{Installed/Updated *gitc*, please issue *gitc install_autocomplete* to install/update bash-completion}
   s.rubyforge_project = "capita_git"
 
   man_files = Dir.glob("lib/capita_git/man/**/*")
