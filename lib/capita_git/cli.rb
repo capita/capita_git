@@ -8,6 +8,16 @@ module CapitaGit
   class CLI < Thor
     include Thor::Actions
 
+    ['checkout', 'push', 'pull', 'fetch', 'add', 'rm', 'status', 'diff', 'commit', 'rebase'].each do |cmd|
+      class_eval do
+        desc "#{cmd}", "Passes #{cmd} to git"
+        define_method cmd.to_sym do |*args|
+          log :warn, 'You called a git command from gitc, passing it along for now...'
+          system "git #{cmd} #{args}"
+        end
+      end
+    end
+
     def initialize(*)
       super
       the_shell = (options["no-color"] ? Thor::Shell::Basic.new : shell)
