@@ -129,6 +129,17 @@ module ShouldaMacros
       end
     end
 
+    def should_be_on_branch(name, user=false)
+      should "be on branch '#{name}'" do
+        branch = user ? "#{CapitaGit::Repository.open('.').user_shortcut}_#{name}" : name
+        assert_equal branch, CapitaGit::Repository.open('.').current_branch
+      end
+    end
+
+    def should_be_on_user_branch(name)
+      should_be_on_branch(name, true)
+    end
+
     def should_have_branch(name)
       should "have branch '#{name}'" do
         assert repo.branches.map(&:name).include?(name), "Found in #{Dir.getwd}: " + repo.branches.map(&:name).inspect
