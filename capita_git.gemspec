@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('ronn', ">= 0.7.3")
   s.add_development_dependency('shoulda', ">= 2.11.0")
   s.add_development_dependency('open4')
+  s.add_development_dependency('simplecov')
 end

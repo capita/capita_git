@@ -4,3 +4,4 @@ pkg/*
 .idea
 lib/capita_git/man
 tmp/*
+coverage
