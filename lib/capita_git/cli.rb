@@ -165,7 +165,7 @@ module CapitaGit
     def install_autocomplete
       root = File.expand_path("../../", __FILE__)
       system "cp #{root}/bash_completion.txt ~/.gitc_completion"
-      system "if grep -q 'gitc_completion' ~/.bashrc; then echo 'Done'; else echo '. .gitc_completion' >> ~/.bashrc; . ~/.gitc_completion; fi"
+      system "if grep -q 'gitc_completion' ~/.bashrc; then echo 'Done'; else echo -e '\n. .gitc_completion' >> ~/.bashrc; . ~/.gitc_completion; fi"
     end
 
     desc "publish", "Published a local branch to origin"
